@@ -1,0 +1,21 @@
+{
+  "name": "index",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.5.0",
+    "aws": "0.0.3-2",
+    "aws-sdk": "^2.125.0",
+    "dynamodb": "^1.0.0",
+    "format-duration": "^1.0.0",
+    "joi": "^11.1.1",
+    "lodash": "^4.17.4",
+    "tinyspeck": "^1.4.2"
+  }
+}

@@ -1,0 +1,8 @@
+{
+	"whitelist": {
+		"summary": "  /whitelist <user> <channel> .. ex. /whitelist brdu exchangeupdates\n  /whitelist remove <user> <channel> .. ex. /whitelist remove brdu exchangeupdates",
+		"remove": "  /whitelist remove <user> <channel> .. ex. /whitelist remove brdu exchangeupdates",
+		"add": "  /whitelist <user> <channel> .. ex. /whitelist brdu exchangeupdates"
+	},
+	"readonly": "  /readonly <channel> <true/false> .. ex. /readonly exchangeupdates true\n  /readonly list"
+}
