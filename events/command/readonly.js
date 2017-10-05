@@ -1,18 +1,19 @@
+var admin_users = require('../../utils/admin_users')
 var async = require('async')
 var usage = require('./usage.json')
 var slack = require('../../utils/slack')
 var dogpounddb = require('../../utils/dogpounddb')
 
-const ADMIN_USERS = ['brdu', 'thecryptodog']
+const ADMIN_USERS = process.env.ADMIN_USERS ['brdu', 'thecryptodog']
 
 module.exports = function(slackEvent, callback) {
-	if (!ADMIN_USERS.includes(slackEvent.user_name)) {
+	if (!admin_users || !admin_users.includes(slackEvent.user_name)) {
 		callback(null, {
 			message: "User " + slackEvent.user_name + " not authorized to use " + slackEvent.command + " command."
 		})
 		return
 	}
-
+	
 	let validation = parseAndValidate(slackEvent)
 	let commands = validation.commands
 	if (validation.error) {

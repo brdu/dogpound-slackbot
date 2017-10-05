@@ -1,3 +1,4 @@
+var admin_users = require('../../utils/admin_users')
 var async = require('async')
 var usage = require('./usage.json')
 var slack = require('../../utils/slack')
@@ -6,7 +7,7 @@ var dogpounddb = require('../../utils/dogpounddb')
 const ADMIN_USERS = ['brdu', 'thecryptodog']
 
 module.exports = function(slackEvent, callback) {
-	if (!ADMIN_USERS.includes(slackEvent.user_name)) {
+	if (!admin_users || !admin_users.includes(slackEvent.user_name)) {
 		callback(null, {
 			message: "User " + slackEvent.user_name + " not authorized to use " + slackEvent.command + " command."
 		})
@@ -39,7 +40,6 @@ module.exports = function(slackEvent, callback) {
 }
 
 function addToWhitelist(userName, channelName, slackEvent, callback) {
-	console.log("Add " + userName + " to " +channelName)
 	async.parallel([
 		function(dbCallback) {
 			dogpounddb.getByName(channelName, function(err, channel) {
@@ -70,14 +70,6 @@ function addToWhitelist(userName, channelName, slackEvent, callback) {
 		var dbChannel = res[0]
 		var channelItem = res[1]
 		var user = res[2]
-		console.log("RES")
-		console.log(res)
-		console.log("dbChannel")
-		console.log(dbChannel)
-		console.log("channelItem")
-		console.log(channelItem)
-		console.log("user")
-		console.log(user)
 
 		var errorMsg
 		if (!channelItem && !user) {
@@ -95,7 +87,6 @@ function addToWhitelist(userName, channelName, slackEvent, callback) {
 			return
 		}
 
-		console.log(dbChannel)
 		if (dbChannel) {
 			var whitelist = dbChannel.whitelist ? dbChannel.whitelist : []
 			var isUserWhitelisted = false
@@ -105,9 +96,7 @@ function addToWhitelist(userName, channelName, slackEvent, callback) {
 					break
 				}
 			}
-			console.log(dbChannel)
-			console.log("wl")
-			console.log(whitelist)
+
 			if (isUserWhitelisted) {
 				callback(null, {
 					message: "User " + userName + " already whitelist for channel " + channelName
@@ -205,14 +194,12 @@ function removeFromWhitelist(user, channel, slackEvent, callback) {
 			}
 
 			var whitelist = dbChannel ? dbChannel.whitelist : []
-			console.log(whitelist)
 			var newWhitelist = []
 			for (var i = 0; i < whitelist.length; i++) {
 				if (whitelist[i].name !== user) {
 					newWhitelist.push(whitelist[i])
 				}
 			}
-			console.log(newWhitelist)
 	
 			if (newWhitelist.length == whitelist.length) {
 				callback(null, {
@@ -279,7 +266,6 @@ function postWhitelist(slackEvent, callback) {
 					return b.name.length - a.name.length
 				})[0].name.length
 
-				console.log(maxChars)
 				for (var i = 0; i < channels.length; i++) {
 					var cn = channels[i].name
 					var wl = channels[i].whitelist
@@ -289,7 +275,6 @@ function postWhitelist(slackEvent, callback) {
 					cn = "   " + cn + "- whitelist [" + wl + "]"
 					msg = msg + cn + "\n"
 				}
-				console.log(msg)
 			}
 
 			callback(null, {
